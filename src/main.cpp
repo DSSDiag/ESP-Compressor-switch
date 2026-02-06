@@ -86,9 +86,6 @@ void setup() {
     RMaker.enableTZ();
     RMaker.enableSchedule();
 
-    // Show debug
-    Serial.printf("\nNode ID: %s\n", RMaker.getNodeID());
-
     // Register WiFi Event Handler
     WiFi.onEvent(sysProvEvent);
 
