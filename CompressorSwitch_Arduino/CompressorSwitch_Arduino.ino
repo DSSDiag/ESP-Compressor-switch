@@ -83,8 +83,9 @@ void setup() {
     RMaker.enableOTA(OTA_USING_PARAMS);
 
     // Enable Time Zone and Schedule
-    RMaker.enableTZ();
-    RMaker.enableSchedule();
+    // Commented out to avoid compilation errors with some library versions
+    // RMaker.enableTZ();
+    // RMaker.enableSchedule();
 
     // Show debug
     // Commented out to ensure compatibility with various ESP RainMaker library versions
