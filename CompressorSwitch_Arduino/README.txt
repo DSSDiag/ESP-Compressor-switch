@@ -32,13 +32,13 @@ Select the following settings in the Tools menu:
    Since you are using the native USB port on the C3 Mini, this MUST be ENABLED
    to see any text (like the QR code) in the Serial Monitor.
 
-3. Flash Mode: "DIO" or "QIO" (usually DIO is safer)
-4. Partition Scheme: "RainMaker" (if available).
-   - If "RainMaker" is NOT available, select "Custom" or "Huge APP (3MB No OTA/1MB SPIFFS)".
-   - To use the provided `partitions.csv`:
-     - Select "Partition Scheme: Custom".
-     - Copy `partitions.csv` to the sketch folder (it's already here).
-     - The IDE should pick up the csv file.
+3. Partition Scheme: "RainMaker" (if available).
+   - IF YOU ARE USING "XIAO ESP32C3" OR SIMILAR:
+     You MUST select a larger partition scheme. The "Default" one is too small.
+     Select "Huge APP (3MB No OTA/1MB SPIFFS)" or "RainMaker" if listed.
+     Alternatively, use "Partition Scheme: Custom" and the IDE should pick up `partitions.csv`.
+
+4. Flash Mode: "DIO" or "QIO" (usually DIO is safer)
 
 UPLOAD & TROUBLESHOOTING:
 -------------------------
@@ -50,7 +50,12 @@ UPLOAD & TROUBLESHOOTING:
 **IF YOU SEE NOTHING IN SERIAL MONITOR:**
 1. Make sure "USB CDC On Boot" is ENABLED in the Tools menu.
 2. Press the RESET button on the ESP32-C3 board *while* the Serial Monitor is open.
-   This will reboot the board and should show the startup logs and QR Code.
+
+**IF YOU SEE "No core dump partition found!" OR IT HANGS:**
+1. This means your Partition Scheme is too small.
+2. Go to Tools > Erase All Flash Before Sketch Upload > ENABLED.
+3. Go to Tools > Partition Scheme > Select "Huge APP (3MB No OTA/1MB SPIFFS)".
+4. Upload again.
 
 USAGE:
 ------

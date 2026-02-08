@@ -1,6 +1,7 @@
 #include "RMaker.h"
 #include "WiFi.h"
 #include "WiFiProv.h"
+#include <nvs_flash.h> // Include NVS Flash library
 
 // Set the Relay Pin. GPIO 4 is a safe default for ESP32-C3.
 #define RELAY_PIN 4
@@ -75,16 +76,30 @@ void setup() {
     Serial.println("Starting Compressor Switch...");
     Serial.println("==================================================");
 
+    // Initialize NVS
+    esp_err_t err = nvs_flash_init();
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        Serial.println("NVS Partition was truncated and needs to be erased");
+        Serial.println("Erasing NVS...");
+        ESP_ERROR_CHECK(nvs_flash_erase());
+        err = nvs_flash_init();
+    }
+    ESP_ERROR_CHECK(err);
+    Serial.println("NVS Initialized successfully.");
+
     // Initialize the Node
+    Serial.println("[DEBUG] Initializing RainMaker Node...");
     Node my_node;
     my_node = RMaker.initNode(NODE_NAME);
 
     // callback for standard Switch device
     my_switch.addCb(write_callback);
 
+    Serial.println("[DEBUG] Adding Switch Device...");
     // Add switch device to the node
     my_node.addDevice(my_switch);
 
+    Serial.println("[DEBUG] Enabling OTA...");
     // Enable OTA
     RMaker.enableOTA(OTA_USING_PARAMS);
 
@@ -97,11 +112,15 @@ void setup() {
     // Commented out to ensure compatibility with various ESP RainMaker library versions
     // Serial.printf("\nNode ID: %s\n", RMaker.getNodeID());
 
+    Serial.println("[DEBUG] Registering WiFi Events...");
     // Register WiFi Event Handler
     WiFi.onEvent(sysProvEvent);
 
+    Serial.println("[DEBUG] Starting RainMaker...");
     // Start RainMaker
     RMaker.start();
+
+    Serial.println("[DEBUG] RainMaker Start function returned. Running loop...");
 
     // If not provisioned, this will start provisioning.
     // Use the ESP RainMaker App to claim.
