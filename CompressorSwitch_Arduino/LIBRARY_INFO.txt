@@ -1,0 +1,1 @@
+ESP RainMaker is included in the ESP32 Board Manager package. You do not need to install a separate library.

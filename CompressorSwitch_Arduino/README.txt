@@ -18,33 +18,39 @@ PREREQUISITES:
    - Go to Tools > Board > Boards Manager.
    - Search for "esp32" by Espressif Systems and install it.
 
-3. Install ESP RainMaker Library:
-   - Go to Sketch > Include Library > Manage Libraries.
-   - Search for "ESP RainMaker" by Espressif and install the latest version.
+   **NOTE ON LIBRARY:**
+   The "ESP RainMaker" library is BUILT-IN to the ESP32 Board package.
+   You do NOT need to install it separately from the Library Manager.
 
-BOARD CONFIGURATION:
---------------------
+BOARD CONFIGURATION (CRITICAL!):
+--------------------------------
 Select the following settings in the Tools menu:
 
 1. Board: "ESP32C3 Dev Module" (or "ESP32-C3 SuperMini" if available)
 2. USB CDC On Boot: "Enabled"
-   (IMPORTANT: This allows Serial output over the USB port on the C3)
+   *** THIS IS THE MOST IMPORTANT SETTING ***
+   Since you are using the native USB port on the C3 Mini, this MUST be ENABLED
+   to see any text (like the QR code) in the Serial Monitor.
+
 3. Flash Mode: "DIO" or "QIO" (usually DIO is safer)
 4. Partition Scheme: "RainMaker" (if available).
-   - If "RainMaker" is NOT available, select "Custom" or "Default 4MB with spiffs (1.2MB APP/1.5MB SPIFFS)" might work but RainMaker usually needs larger app partitions.
+   - If "RainMaker" is NOT available, select "Custom" or "Huge APP (3MB No OTA/1MB SPIFFS)".
    - To use the provided `partitions.csv`:
-     - Select "Huge APP (3MB No OTA/1MB SPIFFS)" if you don't need OTA updates.
-     - OR if your board definition supports "Custom":
-       Copy `partitions.csv` to the sketch folder (it's already here).
-       Select "Partition Scheme: Custom".
-       The IDE should pick up the csv file.
+     - Select "Partition Scheme: Custom".
+     - Copy `partitions.csv` to the sketch folder (it's already here).
+     - The IDE should pick up the csv file.
 
-UPLOAD:
--------
+UPLOAD & TROUBLESHOOTING:
+-------------------------
 1. Connect your ESP32-C3 via USB.
 2. Select the correct Port in Tools > Port.
 3. Click "Upload".
-4. Open Serial Monitor (115200 baud) to see the QR code for provisioning.
+4. IMMEDIATELY after upload, Open Serial Monitor (115200 baud).
+
+**IF YOU SEE NOTHING IN SERIAL MONITOR:**
+1. Make sure "USB CDC On Boot" is ENABLED in the Tools menu.
+2. Press the RESET button on the ESP32-C3 board *while* the Serial Monitor is open.
+   This will reboot the board and should show the startup logs and QR Code.
 
 USAGE:
 ------

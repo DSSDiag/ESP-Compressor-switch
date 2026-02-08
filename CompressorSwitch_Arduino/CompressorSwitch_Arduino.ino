@@ -62,12 +62,18 @@ void write_callback(Device *device, Param *param, const param_val_t val, void *p
 void setup() {
     Serial.begin(115200);
 
+    // On ESP32-C3 with Native USB (CDC), wait for Serial to connect
+    // otherwise the first logs (like the QR code) might be missed.
+    // Try to open Serial Monitor quickly after uploading!
+    delay(3000);
+
     // Configure Relay Pin
     pinMode(RELAY_PIN, OUTPUT);
     digitalWrite(RELAY_PIN, LOW); // Start OFF (Option A)
 
-    delay(1000);
-    Serial.println("\nStarting Compressor Switch...");
+    Serial.println("\n==================================================");
+    Serial.println("Starting Compressor Switch...");
+    Serial.println("==================================================");
 
     // Initialize the Node
     Node my_node;
