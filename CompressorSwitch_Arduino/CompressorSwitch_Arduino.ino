@@ -76,7 +76,7 @@ void setup() {
     Serial.println("Starting Compressor Switch...");
     Serial.println("==================================================");
 
-    // Initialize NVS
+    // Initialize NVS (Standard Storage)
     esp_err_t err = nvs_flash_init();
     if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         Serial.println("NVS Partition was truncated and needs to be erased");
@@ -86,6 +86,22 @@ void setup() {
     }
     ESP_ERROR_CHECK(err);
     Serial.println("NVS Initialized successfully.");
+
+    // Initialize Factory NVS (named "fctry" or "nvs_keys")
+    // RainMaker uses this. If it's corrupt, RainMaker fails to init.
+    // We try to init it explicitly to catch errors.
+    Serial.println("[DEBUG] Initializing Factory NVS...");
+    err = nvs_flash_init_partition("fctry");
+    if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        Serial.println("Factory NVS Partition corrupted. Erasing...");
+        ESP_ERROR_CHECK(nvs_flash_erase_partition("fctry"));
+        err = nvs_flash_init_partition("fctry");
+    }
+    if (err != ESP_OK) {
+        Serial.printf("Factory NVS Init Warning: %s. (This is expected if no 'fctry' partition exists)\n", esp_err_to_name(err));
+    } else {
+        Serial.println("Factory NVS Initialized.");
+    }
 
     // Initialize the Node
     Serial.println("[DEBUG] Initializing RainMaker Node...");
